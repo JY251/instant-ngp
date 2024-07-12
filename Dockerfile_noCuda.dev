@@ -1,0 +1,25 @@
+FROM ubuntu:20.04
+
+RUN apt-get update
+
+# # Set the timezone
+RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime 
+
+RUN apt-get install -y build-essential git python3-dev python3-pip libopenexr-dev libxi-dev \
+										libglfw3-dev libglew-dev libomp-dev libxinerama-dev libxcursor-dev wget
+RUN	rm -rf /var/lib/apt/lists/*
+
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.21.4/cmake-3.21.4-linux-x86_64.sh \
+    && chmod +x cmake-3.21.4-linux-x86_64.sh \
+    && ./cmake-3.21.4-linux-x86_64.sh --skip-license --prefix=/usr/local \
+    && rm cmake-3.21.4-linux-x86_64.sh
+
+RUN git clone --recursive https://github.com/nvlabs/instant-ngp
+RUN cd instant-ngp
+
+# ENV HOME /root
+RUN export PATH="/usr/local/cuda-12.1/bin:$PATH" >> ~/.bashrc
+RUN LD_LIBRARY_PATH="/usr/local/cuda-12.1/lib64:$LD_LIBRARY_PATH" >> ~/.bashrc
+
+# RUN cmake . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+# RUN cmake --build build --config RelWithDebInfo -j
