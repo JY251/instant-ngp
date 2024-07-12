@@ -20,3 +20,11 @@
 __pycache__
 .DS_Store
 imgui.ini
+
+CMakeFiles/*
+dependencies/*
+notebooks/
+scripts/
+CMakeCache.txt
+cmake_install.cmake
+error
