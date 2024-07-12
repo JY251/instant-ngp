@@ -6,14 +6,14 @@
 # distribution of this software and related documentation without an express
 # license agreement from NVIDIA CORPORATION is strictly prohibited.
 
-cmake_minimum_required(VERSION 3.18)
-set(CMAKE_CUDA_ARCHITECTURES 80)
+cmake_minimum_required(VERSION 3.16)
 
 project(instant-ngp
 	VERSION 1.0
 	DESCRIPTION "Instant Neural Graphics Primitives"
 	LANGUAGES C CXX CUDA
 )
+message("project: Succ")
 set(NGP_VERSION "${CMAKE_PROJECT_VERSION}")
 
 if (NOT NGP_DEPLOY)
@@ -21,7 +21,7 @@ if (NOT NGP_DEPLOY)
 endif()
 
 option(NGP_BUILD_EXECUTABLE "Build instant-ngp.exe?" ON)
-option(NGP_BUILD_WITH_GUI "Build with GUI support (requires GLFW and GLEW)?" ON)
+option(NGP_BUILD_WITH_GUI "Build with GUI support (requires GLFW and GLEW)?" OFF)
 option(NGP_BUILD_WITH_OPTIX "Build with OptiX to enable hardware ray tracing?" ON)
 option(NGP_BUILD_WITH_PYTHON_BINDINGS "Build bindings that allow instrumenting instant-ngp with Python?" ON)
 option(NGP_BUILD_WITH_VULKAN "Build with Vulkan to enable DLSS support?" ON)
@@ -89,9 +89,10 @@ list(APPEND CUDA_NVCC_FLAGS "--use_fast_math")
 set(TCNN_BUILD_BENCHMARK OFF)
 set(TCNN_BUILD_EXAMPLES OFF)
 set(TCNN_ALLOW_CUBLAS_CUSOLVER OFF)
-add_subdirectory(dependencies/tiny-cuda-nn)
-
+message("project: Succ2")
 set(CMAKE_CUDA_ARCHITECTURES 75)
+add_subdirectory(dependencies/tiny-cuda-nn)
+message("project: Succ3")
 
 set(CMAKE_CUDA_ARCHITECTURES ${TCNN_CUDA_ARCHITECTURES})
 
@@ -183,9 +184,6 @@ if (NGP_BUILD_WITH_GUI)
 		list(APPEND GUI_SOURCES "dependencies/gl3w/GL/gl3w.c")
 		list(APPEND NGP_LIBRARIES opengl32 $<TARGET_OBJECTS:glfw_objects>)
 	else()
-		find_package(GLEW REQUIRED)
-		list(APPEND NGP_INCLUDE_DIRECTORIES ${GLEW_INCLUDE_DIRS})
-		list(APPEND NGP_LIBRARIES GL ${GLEW_LIBRARIES} $<TARGET_OBJECTS:glfw_objects>)
 	endif()
 
 	list(APPEND GUI_SOURCES
@@ -281,6 +279,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR})
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+set(CMAKE_CUDA_COMPILER /home/share/bashrc_cuda)
+SET (CMAKE_C_COMPILER_WORKS 1)
+SET (CMAKE_CXX_COMPILER_WORKS 1)
 
 get_filename_component(CUDA_COMPILER_BIN "${CMAKE_CUDA_COMPILER}" DIRECTORY)
 get_filename_component(CUDA_DIR "${CUDA_COMPILER_BIN}" DIRECTORY)
